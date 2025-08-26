@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Styling & JavaScript</title>
+  <style>
+    /* 🌍 Basic Reset */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; }
+
+    /* 🔹 NAVBAR */
+    nav {
+      background: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+    }
+    nav ul li {
+      margin: 0 15px;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    /* 🔹 CONTENT SECTIONS */
+    section {
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* 🔹 RESPONSIVE DESIGN */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+      }
+      nav ul li {
+        margin: 10px 0;
+      }
+    }
+
+    /* 🔹 QUIZ */
+    #quiz { margin-top: 20px; }
+    .question { margin-bottom: 20px; }
+
+    /* 🔹 IMAGE CAROUSEL */
+    #carousel {
+      width: 300px;
+      margin: 20px auto;
+      position: relative;
+    }
+    #carousel img {
+      width: 100%;
+      display: none;
+    }
+    #carousel img.active {
+      display: block;
+    }
+    .controls {
+      margin-top: 10px;
+    }
+
+    /* 🔹 API DATA */
+    #joke {
+      background: #f4f4f4;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+    button {
+      padding: 8px 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background: #333;
+      color: white;
+    }
+    button:hover { background: #555; }
+  </style>
+</head>
+<body>
+
+  <!-- 🔹 NAVBAR -->
+  <nav>
+    <ul>
+      <li><a href="#responsive">Responsive Design</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+      <li><a href="#carousel">Carousel</a></li>
+      <li><a href="#api">API Data</a></li>
+    </ul>
+  </nav>
+
+  <!-- 🔹 RESPONSIVE DESIGN SECTION -->
+  <section id="responsive">
+    <h2> Responsive Design </h2>
+    <p>Resize the browser window to see the navigation adapt!</p>
+  </section>
+
+  <!-- 🔹 QUIZ SECTION -->
+  <section id="quiz">
+    <h2>Quick Quiz</h2>
+    <div class="question">
+      <p>1. Which language is used for styling web pages?</p>
+      <input type="radio" name="q1" value="HTML"> HTML
+      <input type="radio" name="q1" value="CSS"> CSS
+      <input type="radio" name="q1" value="JS"> JavaScript
+    </div>
+    <div class="question">
+      <p>2. Which of the following is used to define the structure and content of a web page?</p>
+      <input type="radio" name="q2" value="CSS"> CSS
+      <input type="radio" name="q2" value="HTML">HTML 
+      <input type="radio" name="q2" value="PYTHON"> PYTHON
+      </div>
+    <button onclick="checkQuiz()">Submit Quiz</button>
+    <p id="quizResult"></p>
+  </section>
+
+  <!-- 🔹 CAROUSEL SECTION -->
+  <section id="carousel">
+    <h2>Image Carousel</h2>
+    <img src="https://picsum.photos/300/200?random=1" class="active">
+    <img src="https://picsum.photos/300/200?random=2">
+    <img src="https://picsum.photos/300/200?random=3">
+    <div class="controls">
+      <button onclick="prevImage()">Prev</button>
+      <button onclick="nextImage()">Next</button>
+    </div>
+  </section>
+
+  <!-- 🔹 API DATA SECTION -->
+  <section id="api">
+    <h2>Fetch a Random Joke</h2>
+    <button onclick="getJoke()">Get Joke</button>
+    <p id="joke">Click the button to load a joke.</p>
+  </section>
+
+  <script>
+    /* ✅ QUIZ FUNCTION */
+    function checkQuiz() {
+      let score = 0;
+      const q1 = document.querySelector('input[name="q1"]:checked');
+      const q2 = document.querySelector('input[name="q2"]:checked');
+
+      if(q1 && q1.value === "CSS") score++;
+      if(q2 && q2.value === "HTML") score++;
+
+      document.getElementById("quizResult").innerText = "You scored " + score + "/2";
+    }
+
+    /* ✅ CAROUSEL FUNCTION */
+    let current = 0;
+    const images = document.querySelectorAll("#carousel img");
+
+    function showImage(index) {
+      images.forEach(img => img.classList.remove("active"));
+      images[index].classList.add("active");
+    }
+
+    function nextImage() {
+      current = (current + 1) % images.length;
+      showImage(current);
+    }
+
+    function prevImage() {
+      current = (current - 1 + images.length) % images.length;
+      showImage(current);
+    }
+
+    /* ✅ API FETCH FUNCTION */
+    async function getJoke() {
+      const response = await fetch("https://official-joke-api.appspot.com/random_joke");
+      const data = await response.json();
+      document.getElementById("joke").innerText = data.setup + " - " + data.punchline;
+    }
+  </script>
+
+</body>
+</html

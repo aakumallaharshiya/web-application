@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Clock & Stopwatch</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(120deg, #dcdbd5, #c48bda);
+      color: #181818;
+    }
+    .wrapper {
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.4);
+      width: 350px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 22px;
+      letter-spacing: 1px;
+    }
+    .display {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 12px 0 20px;
+      letter-spacing: 2px;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .start { background: #22c55e; color: #fff; }
+    .stop { background: #ef4444; color: #fff; }
+    .reset { background: #eab308; color: #f6f4f4; }
+    hr {
+      border: none;
+      height: 1px;
+      background: rgba(255,255,255,.2);
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>⏰ Digital Clock</h1>
+    <div id="clock" class="display">00:00:00</div>
+
+    <hr>
+
+    <h1>⏱ Stopwatch</h1>
+    <div id="stopwatch" class="display">00:00:00.0</div>
+    <div class="buttons">
+      <button class="start" onclick="startSW()">Start</button>
+      <button class="stop" onclick="stopSW()">Stop</button>
+      <button class="reset" onclick="resetSW()">Reset</button>
+    </div>
+  </div>
+
+  <script>
+    // Digital Clock
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2,'0');
+      const m = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      document.getElementById("clock").textContent = `${h}:${m}:${s}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Stopwatch
+    let swInterval, swStart, elapsed = 0, running = false;
+
+    function format(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const h = String(Math.floor(totalSeconds / 3600)).padStart(2,'0');
+      const m = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,'0');
+      const s = String(totalSeconds % 60).padStart(2,'0');
+      const msPart = Math.floor((ms % 1000) / 100); // tenths
+      return `${h}:${m}:${s}.${msPart}`;
+    }
+
+    function renderSW() {
+      document.getElementById("stopwatch").textContent = format(elapsed);
+    }
+
+    function startSW() {
+      if (running) return;
+      running = true;
+      swStart = Date.now() - elapsed;
+      swInterval = setInterval(() => {
+        elapsed = Date.now() - swStart;
+        renderSW();
+      }, 100);
+    }
+
+    function stopSW() {
+      running = false;
+      clearInterval(swInterval);
+    }
+
+    function resetSW() {
+      stopSW();
+      elapsed = 0;
+      renderSW();
+    }
+
+    renderSW();
+  </script>
+</body>
+</html>
